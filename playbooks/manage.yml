@@ -1,0 +1,8 @@
+- name: Check host
+  hosts: raspberry
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Role to ping host
+      include_role:
+        name: ping_host
