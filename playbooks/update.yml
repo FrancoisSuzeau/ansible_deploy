@@ -16,3 +16,12 @@
       include_role:
         name: "{{ system_os_type }}/update"
         tasks_from: reboot-if-needed
+
+
+- name: Update win10 host
+  hosts: win10
+  gather_facts: false
+  tasks:
+    - name: Role to update windows
+      include_role:
+        name: "{{ system_os_type }}/update"
