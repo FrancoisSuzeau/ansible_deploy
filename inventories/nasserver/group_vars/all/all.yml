@@ -1,5 +1,6 @@
 ansible_host: 192.168.1.73
 ansible_port: 22
+ansible_connection: ssh
 ansible_user: francois
-# ansible_password: 4IcnYLklANr3t5mVq5NI
 ansible_password: "{{ francois_pwd }}"
+ansible_become: true

@@ -1,8 +1,15 @@
-- name: Check host
+- name: Check raspberry pie host
   hosts: raspberry
   gather_facts: false
-  become: true
   tasks:
     - name: Role to ping host
       include_role:
-        name: ping_host
+        name: "{{ system_os_type }}/ping_host"
+
+- name: Check win10 host
+  hosts: win10
+  gather_facts: false
+  tasks:
+    - name: Role to ping host
+      include_role:
+        name: "{{ system_os_type }}/ping_host"

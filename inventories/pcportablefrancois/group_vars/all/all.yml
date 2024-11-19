@@ -1,0 +1,9 @@
+ansible_host: 192.168.1.165
+ansible_port: 5985
+ansible_user: Ansible
+ansible_password: "{{ Ansible_pwd }}"
+ansible_connection: winrm
+ansible_winrm_transport: basic
+ansible_winrm_server_cert_validation: ignore
+ansible_shell: powershell
+ansible_become: false
