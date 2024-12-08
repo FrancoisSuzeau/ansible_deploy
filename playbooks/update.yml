@@ -1,27 +1,15 @@
-- name: Update raspberry pie host
-  hosts: raspberry
+- name: Update raspberry-pie/ubuntu host
+  hosts: linux
   gather_facts: false
   tasks:
-    - name: Role to get update
+    - name: Role to update
       include_role:
         name: "{{ system_os_type }}/update"
-        tasks_from: get-update
-
-    - name: Role to apply update
-      include_role:
-        name: "{{ system_os_type }}/update"
-        tasks_from: upgrade-package
-
-    - name: Role to apply update
-      include_role:
-        name: "{{ system_os_type }}/update"
-        tasks_from: reboot-if-needed
-
 
 - name: Update win10 host
   hosts: win10
   gather_facts: false
   tasks:
-    - name: Role to update windows
+    - name: Role to update
       include_role:
         name: "{{ system_os_type }}/update"

@@ -1,8 +1,0 @@
-- name: Upgrade all packages (for Debian-based systems)
-  ansible.builtin.apt:
-    upgrade: dist
-  register: result
-
-- name: Show log
-  ansible.builtin.debug:
-    var: result

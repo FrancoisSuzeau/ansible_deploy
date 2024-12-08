@@ -1,5 +1,5 @@
-- name: Check raspberry pie host
-  hosts: raspberry
+- name: Check raspberry-pie/ubuntu host
+  hosts: linux
   gather_facts: false
   tasks:
     - name: Role to ping host
