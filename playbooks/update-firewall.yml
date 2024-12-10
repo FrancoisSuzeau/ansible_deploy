@@ -1,0 +1,8 @@
+---
+- name: Update firewall rule on host
+  hosts: "{{ hostname }}"
+  gather_facts: false
+  tasks:
+    - name: Role to get enabled firewall rules
+      include_role:
+        name: "{{ system_os_type }}/firewall"

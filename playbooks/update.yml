@@ -1,13 +1,5 @@
-- name: Update raspberry-pie/ubuntu host
-  hosts: linux
-  gather_facts: false
-  tasks:
-    - name: Role to update
-      include_role:
-        name: "{{ system_os_type }}/update"
-
-- name: Update win10 host
-  hosts: win10
+- name: Update Host
+  hosts: "{{ hostname }}"
   gather_facts: false
   tasks:
     - name: Role to update
