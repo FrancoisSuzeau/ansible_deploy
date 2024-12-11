@@ -2,8 +2,21 @@
 - name: Update firewall rule on host
   hosts: "{{ hostname }}"
   gather_facts: false
+  vars:
+    file_exist: false
   tasks:
-    - name: Role to get enabled firewall rules
+    - name: Role to get enabled firewall rules on distant host
       include_role:
         name: "{{ system_os_type }}/firewall"
         tasks_from: prepare-firewall-rules.yml
+
+    - name: Check the files exist
+      include_role:
+        name: "{{ system_os_type }}/firewall"
+        tasks_from: check-file-exist.yml
+
+    - name: Role to load firewall rule to disabled
+      include_role:
+        name: "{{ system_os_type }}/firewall"
+        tasks_from: load-rules-to-disabled.yml
+      when: file_exist

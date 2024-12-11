@@ -1,0 +1,10 @@
+---
+- name: Read the local file
+  ansible.builtin.set_fact:
+    local_file_content: "{{ lookup('file', '{{ role_path  }}/files/transformed_data.json') }}"
+
+- name: Show the loaded file content
+  ansible.builtin.debug:
+    var: local_file_content
+  tags:
+    - debug
