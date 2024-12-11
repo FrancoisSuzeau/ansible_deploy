@@ -14,12 +14,11 @@
         | list
       }}
 
-
-# - name: Display enabled firewall rules
-#   ansible.builtin.debug:
-#     msg: "{{ enabled_firewall_rules[0] }}"
-#   tags:
-#     - debug
+- name: Display enabled firewall rules
+  ansible.builtin.debug:
+    msg: "{{ enabled_firewall_rules[0] }}"
+  tags:
+    - debug
 
 - name: Copy enabled_firewall_rules to input_data
   set_fact:
@@ -30,6 +29,12 @@
     var:  input_data
   tags:
     - debug
+
+- name: Ensure the file is deleted
+  ansible.builtin.file:
+    path: "{{ role_path  }}/files/transformed_data.json"
+    state: absent
+  delegate_to: localhost
 
 - name: Execute the Python script
   command:  python3 {{ role_path  }}/files/string_to_dict.py "{{ input_data }}"
