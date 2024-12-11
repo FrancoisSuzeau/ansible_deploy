@@ -21,7 +21,7 @@
     - debug
 
 - name: Copy enabled_firewall_rules to input_data
-  set_fact:
+  ansible.builtin.set_fact:
     input_data: "{{ enabled_firewall_rules[0] }}"
 
 - name: Display input_data
@@ -37,9 +37,10 @@
   delegate_to: localhost
 
 - name: Execute the Python script
-  command:  python3 {{ role_path  }}/files/string_to_dict.py "{{ input_data }}"
+  ansible.builtin.command:  python3 {{ role_path  }}/files/string_to_dict.py "{{ input_data }}"
   delegate_to: localhost
   register: script_output
+  when: input_data | length != 0
 
 - name: Display script output
   ansible.builtin.debug:
