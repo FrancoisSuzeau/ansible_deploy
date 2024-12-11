@@ -6,3 +6,4 @@
     - name: Role to get enabled firewall rules
       include_role:
         name: "{{ system_os_type }}/firewall"
+        tasks_from: prepare-firewall-rules.yml
