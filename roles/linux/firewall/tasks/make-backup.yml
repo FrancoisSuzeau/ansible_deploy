@@ -1,0 +1,22 @@
+---
+- name: Backup iptables rules (IPv4)
+  ansible.builtin.shell: iptables-save > {{ path_to_firewall_rule_bck }}/iptables-backup.rules
+  register: output
+
+- name: Display firewall ipv4 rule backup creation
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
+  tags:
+    - debug
+
+- name: Backup ip6tables rules (IPv6)
+  ansible.builtin.shell: ip6tables-save > {{ path_to_firewall_rule_bck }}/ip6tables-backup.rules
+  register: output
+
+- name: Display firewall ipv6 rule backup creation
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
+  tags:
+    - debug

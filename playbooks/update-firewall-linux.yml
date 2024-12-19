@@ -1,0 +1,64 @@
+---
+- name: Update firewall rule on host
+  hosts: "{{ hostname }}"
+  gather_facts: false
+  vars:
+    path: "{{ path_to_firewall_rule_bck }}"
+  tasks:
+
+    - name: Role to delete previous backup directory
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: delete-folder.yml
+
+    - name: Role to create folder {{ path }} 
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: create-folder.yml
+
+    - name: Task to set ufw directory variable
+      ansible.builtin.set_fact:
+        path: "{{ path_to_firewall_rule_bck }}/ufw"
+      delegate_to: localhost
+
+    - name: Role to create folder {{ path }} 
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: create-folder.yml
+
+    - name: Task to set src and dest ufw directory variable
+      ansible.builtin.set_fact:
+        src_path: /etc/ufw/
+        dest_path: "{{ path_to_firewall_rule_bck }}/ufw"
+      delegate_to: localhost
+
+    - name: Role to copy folder {{ path }} 
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: copy-folder.yml
+
+    - name: Make backup ipv4 and ipv6 rules
+      include_role:
+        name: "{{ system_os_type }}/firewall"
+        tasks_from: make-backup.yml
+
+    - name: Task to path and ipv4 rule file variable
+      ansible.builtin.set_fact:
+        path: "{{ path_to_firewall_rule_bck }}"
+        file_name: iptables-backup.rules
+      delegate_to: localhost
+
+    - name: Change permissions
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: create-file.yml
+
+    - name: Task to path and ipv6 rule file variable
+      ansible.builtin.set_fact:
+        file_name: ip6tables-backup.rules
+      delegate_to: localhost
+
+    - name: Change permissions
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: create-file.yml

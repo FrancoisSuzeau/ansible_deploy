@@ -1,0 +1,15 @@
+---
+- name: Create file
+  ansible.builtin.file:
+    path: "{{ path }}/{{ file_name }}"
+    mode: '0600'
+    group: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
+  register: output
+
+- name: Display file creation output
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
+  tags:
+    - debug

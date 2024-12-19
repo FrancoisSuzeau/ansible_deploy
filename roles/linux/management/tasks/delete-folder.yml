@@ -1,0 +1,11 @@
+---
+- name: Remove non-empty directory "{{ path }}"
+  ansible.builtin.command: rm -rf "{{ path }}"
+  register: output
+
+- name: Display remove folder output
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
+  tags:
+    - debug

@@ -1,0 +1,17 @@
+---
+- name: Copy folder from "{{ src_path }} to "{{ dest_path }}"
+  ansible.builtin.copy:
+    src: "{{ src_path }}"
+    dest: "{{ dest_path }}"
+    remote_src: true
+    mode: '0700'
+    group: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
+  register: output
+
+- name: Display copy folder output
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
+  tags:
+    - debug
