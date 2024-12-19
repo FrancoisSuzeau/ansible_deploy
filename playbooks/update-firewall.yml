@@ -10,6 +10,7 @@
     path: "{{ path_to_firewall_rule_bck }}"
     is_python_not_installed: false
     parsed_json: []
+    script_name: extract_firewall_rule_to_json.py
   tasks:
 
     - name: Role to create folder
@@ -54,7 +55,7 @@
 
     - name: Task to set python script variable
       ansible.builtin.set_fact:
-        file_name: string_to_dict.py
+        file_name: "{{ script_name }}"
       delegate_to: localhost
 
     - name: Role to copy python script
@@ -81,8 +82,8 @@
 
     - name: Role to extract firewall rules into json
       include_role:
-        name: "{{ system_os_type }}/firewall"
-        tasks_from: extract-firewall-rules-json-format.yml
+        name: "{{ system_os_type }}/management"
+        tasks_from: execute-script.yml
 
     - name: Task to set json allowed firewall rule variable
       ansible.builtin.set_fact:
@@ -91,17 +92,34 @@
 
     - name: Check the files exist
       include_role:
-        name: "{{ system_os_type }}/firewall"
+        name: "{{ system_os_type }}/management"
         tasks_from: check-file-exist.yml
 
     - name: Role to load allowed firewall rules
       include_role:
-        name: "{{ system_os_type }}/firewall"
-        tasks_from: load-rules-to-block.yml
+        name: "{{ system_os_type }}/management"
+        tasks_from: load-json-file.yml
       when: file_exist
 
     - name: Role to block firewall rules conditionning host
       include_role:
         name: "{{ system_os_type }}/firewall"
         tasks_from: block-firewall-rules.yml
+      when: file_exist
+
+    - name: Task to set json blocked firewall rule variable and file exist to false
+      ansible.builtin.set_fact:
+        file_name: firewall_rules_Block.json
+        file_exist: false
+      delegate_to: localhost
+
+    - name: Check the files exist
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: check-file-exist.yml
+
+    - name: Role to load blocked firewall rules
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: load-json-file.yml
       when: file_exist

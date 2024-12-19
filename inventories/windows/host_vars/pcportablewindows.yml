@@ -37,6 +37,14 @@ firewall_to_block:
   - ss_project.exe
   - stremio-runtime.exe
 
+firewall_not_to_delete:
+  - Xbox Game UI
+  - Xbox Game Bar Plugin
+  - Xbox TCUI
+  - Xbox Identity Provider
+  - Game Bar
+  - Calculatrice Windows
+
 path_to_firewall_rule_bck: C:\Users\{{ ansible_user }}\firewall_workspace
 
 firewall_rules_backup_file_name: backup.wfw

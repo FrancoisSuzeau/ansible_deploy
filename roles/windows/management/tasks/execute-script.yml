@@ -1,6 +1,6 @@
 ---
 - name: Execute the Python script
-  ansible.windows.win_command:  python {{ path }}\string_to_dict.py
+  ansible.windows.win_command:  python {{ path }}\{{ script_name }}
   register: script_output
 
 - name: Display script output
