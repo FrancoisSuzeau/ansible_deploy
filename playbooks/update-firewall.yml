@@ -4,19 +4,104 @@
   gather_facts: false
   vars:
     file_exist: false
+    allowed_firewall_rules: []
+    input_data: []
+    local_file_content: ""
+    path: "{{ path_to_firewall_rule_bck }}"
+    is_python_not_installed: false
+    parsed_json: []
   tasks:
-    - name: Role to get enabled firewall rules on distant host
+
+    - name: Role to create folder
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: create-folder.yml
+
+    - name: Task to set backup file variable
+      ansible.builtin.set_fact:
+        file_name: "{{ firewall_rules_backup_file_name }}"
+      delegate_to: localhost
+
+    - name: Role to delete previous backup
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: delete-file.yml
+
+    - name: Role to create backup
       include_role:
         name: "{{ system_os_type }}/firewall"
-        tasks_from: prepare-firewall-rules.yml
+        tasks_from: make-backup.yml
+
+    - name: Task to set json allowed firewall rule variable
+      ansible.builtin.set_fact:
+        file_name: firewall_rules_Allow.json
+      delegate_to: localhost
+
+    - name: Role to delete allowed firewall rule json file
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: delete-file.yml
+
+    - name: Task to set json blocked firewall rule variable
+      ansible.builtin.set_fact:
+        file_name: firewall_rules_Block.json
+      delegate_to: localhost
+
+    - name: Role to delete blocked firewall rule json file
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: delete-file.yml
+
+    - name: Task to set python script variable
+      ansible.builtin.set_fact:
+        file_name: string_to_dict.py
+      delegate_to: localhost
+
+    - name: Role to copy python script
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: copy-file.yml
+
+    - name: Role to check python installation
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: check-python-installation.yml
+
+    - name: Task to set python uri variable
+      ansible.builtin.set_fact:
+        uri_exe: "{{ python_uri_exe }}"
+      delegate_to: localhost
+      when: is_python_not_installed
+
+    - name: Role to install python
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: install-exe-from-uri.yml
+      when: is_python_not_installed
+
+    - name: Role to extract firewall rules into json
+      include_role:
+        name: "{{ system_os_type }}/firewall"
+        tasks_from: extract-firewall-rules-json-format.yml
+
+    - name: Task to set json allowed firewall rule variable
+      ansible.builtin.set_fact:
+        file_name: firewall_rules_Allow.json
+      delegate_to: localhost
 
     - name: Check the files exist
       include_role:
         name: "{{ system_os_type }}/firewall"
         tasks_from: check-file-exist.yml
 
-    - name: Role to load firewall rule to disabled
+    - name: Role to load allowed firewall rules
       include_role:
         name: "{{ system_os_type }}/firewall"
-        tasks_from: load-rules-to-disabled.yml
+        tasks_from: load-rules-to-block.yml
+      when: file_exist
+
+    - name: Role to block firewall rules conditionning host
+      include_role:
+        name: "{{ system_os_type }}/firewall"
+        tasks_from: block-firewall-rules.yml
       when: file_exist

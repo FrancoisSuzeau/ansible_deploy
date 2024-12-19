@@ -1,0 +1,11 @@
+---
+- name: Execute the Python script
+  ansible.windows.win_command:  python {{ path }}\string_to_dict.py
+  register: script_output
+
+- name: Display script output
+  ansible.builtin.debug:
+    var:  script_output
+  delegate_to: localhost
+  tags:
+    - debug

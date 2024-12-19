@@ -1,0 +1,15 @@
+---
+- name: Block firewall rules
+  ansible.windows.win_shell: Set-NetFirewallRule -DisplayName "{{ item.DisplayName }}" -Action Block 
+  loop: "{{ parsed_json }}"
+  register: firewall_rule_blocked
+  when: 
+    - item.DisplayName is defined
+    - firewall_to_block is defined
+    - item.DisplayName in firewall_to_block
+
+- name: Display new firewall rule blocked
+  ansible.builtin.debug:
+    var: firewall_rule_blocked
+  tags:
+    - debug

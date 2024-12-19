@@ -1,0 +1,12 @@
+---
+- name: Ensure the file is deleted
+  ansible.windows.win_file:
+    path: "{{ path }}\\{{ file_name }}"
+    state: absent
+  register: output
+
+- name: Display delete file output
+  ansible.builtin.debug:
+    var: output
+  tags:
+    - debug

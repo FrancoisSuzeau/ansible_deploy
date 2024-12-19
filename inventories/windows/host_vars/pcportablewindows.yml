@@ -12,5 +12,37 @@ ansible_host: 192.168.1.165
 ansible_user: Ansible
 ansible_password: "{{ Ansible_pwd }}"
 
-firewall_to_update:
-  - display_name: Skype
+firewall_to_block:
+  - Skype
+  - Docker Desktop Backend
+  - solarsystem.exe
+  - Steam
+  - Steam Web Helper
+  - influxd
+  - utorrent
+  - utorrent.exe
+  - Wallpaper Engine
+  - squeamish.exe
+  - Xbox Game UI
+  - Examen
+  - Xbox Game Bar Plugin
+  - Xbox TCUI
+  - Xbox Identity Provider
+  - Game Bar
+  - Calculatrice Windows
+  - client.exe
+  - rebextinysftpserver.exe
+  - java.exe
+  - nginx.exe
+  - ss_project.exe
+  - stremio-runtime.exe
+
+path_to_firewall_rule_bck: C:\Users\{{ ansible_user }}\firewall_workspace
+
+firewall_rules_backup_file_name: backup.wfw
+
+python_version: "3.12.8"
+
+python_uri_exe: "https://www.python.org/ftp/python/{{ python_version }}/python-{{ python_version }}-amd64.exe"
+
+ansible_python_interpreter: "python{{ python_version }}"

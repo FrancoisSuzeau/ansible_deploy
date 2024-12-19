@@ -1,9 +1,8 @@
 ---
-- name: Check the local file
-  ansible.builtin.stat:
-    path: "{{ role_path  }}/files/transformed_data.json"
+- name: Check the local file {{ file_name }}
+  ansible.windows.win_stat:
+    path: "{{ path }}\\{{ file_name }}"
   register: file_check
-  delegate_to: localhost
 
 - name: Set the file_exist variable
   ansible.builtin.set_fact:

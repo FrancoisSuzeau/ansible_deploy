@@ -1,0 +1,12 @@
+---
+- name: Ensure folder is created
+  ansible.windows.win_file:
+    path: "{{ path }}"
+    state: directory
+  register: output
+
+- name: Display creation folder output
+  ansible.builtin.debug:
+    var: output
+  tags:
+    - debug

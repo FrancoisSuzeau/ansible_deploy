@@ -1,0 +1,11 @@
+---
+- name: Download Python installer
+  ansible.windows.win_get_url:
+    url: "{{ uri_exe }}"
+    dest: "{{ path }}"
+
+- name: "Install Python {{ python_version }} silently"
+  ansible.windows.win_command: "{{ path }}\\python-{{ python_version }}-amd64.exe /quiet InstallAllUsers=1 PrependPath=1"
+
+- name: Check Python version after installatiion
+  import_tasks: check-python-installation.yml

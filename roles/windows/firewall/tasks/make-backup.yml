@@ -1,0 +1,11 @@
+---
+- name: Make firewall rules backup
+  ansible.windows.win_shell: "netsh advfirewall export {{ path_to_firewall_rule_bck }}\\{{ firewall_rules_backup_file_name }}"
+  register: output
+
+- name: Display firewall rule backup creation
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
+  tags:
+    - debug

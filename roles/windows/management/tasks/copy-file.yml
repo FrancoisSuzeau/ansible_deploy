@@ -1,0 +1,12 @@
+---
+- name: Copy file to Windows host
+  ansible.windows.win_copy:
+    src: "{{ role_path  }}/files/{{ file_name }}"
+    dest: "{{ path }}\\{{ file_name }}"
+  register: output
+
+- name: Display copy file output
+  ansible.builtin.debug:
+    var: output
+  tags:
+    - debug
