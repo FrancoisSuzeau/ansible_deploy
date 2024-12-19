@@ -37,7 +37,7 @@ firewall_to_block:
   - ss_project.exe
   - stremio-runtime.exe
 
-firewall_not_to_delete:
+firewall_to_keep:
   - Xbox Game UI
   - Xbox Game Bar Plugin
   - Xbox TCUI

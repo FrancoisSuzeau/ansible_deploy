@@ -11,5 +11,6 @@
 - name: Display new firewall rule blocked
   ansible.builtin.debug:
     var: firewall_rule_blocked
+  delegate_to: localhost
   tags:
     - debug

@@ -1,0 +1,17 @@
+---
+- name: Delete firewall rules
+  ansible.windows.win_shell: Remove-NetFirewallRule -DisplayName "{{ item.DisplayName }}"
+  loop: "{{ parsed_json }}"
+  register: firewall_rule_removed
+  when: 
+    - item.DisplayName is defined
+    - firewall_to_keep is defined
+    - item.DisplayName not in firewall_to_keep
+    - item.Action == "Block"
+
+- name: Display new firewall rule blocked
+  ansible.builtin.debug:
+    var: firewall_rule_removed
+  delegate_to: localhost
+  tags:
+    - debug
