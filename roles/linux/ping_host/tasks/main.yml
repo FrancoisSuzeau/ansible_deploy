@@ -2,3 +2,5 @@
 - name: Simply ping the host
   ansible.builtin.ping:
     data: pong
+  tags:
+    - ping
