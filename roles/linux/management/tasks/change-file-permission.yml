@@ -1,14 +1,13 @@
 ---
-- name: Create file
+- name: Change file permissions "{{ path }}/{{ file_name }}"
   ansible.builtin.file:
     path: "{{ path }}/{{ file_name }}"
     mode: '0600'
     group: "{{ ansible_user }}"
     owner: "{{ ansible_user }}"
-  ignore_errors: true
   register: output
 
-- name: Display file creation output
+- name: Display file permission change output
   ansible.builtin.debug:
     var: output
   delegate_to: localhost

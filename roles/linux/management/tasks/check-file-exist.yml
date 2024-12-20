@@ -1,0 +1,11 @@
+---
+- name: Check the local file {{ file_name }}
+  ansible.builtin.stat:
+    path: "{{ path }}/{{ file_name }}"
+  register: file_check
+
+- name: Set the file_exist variable
+  ansible.builtin.set_fact:
+    file_exist: true
+  delegate_to: localhost
+  when: file_check.stat.exists
