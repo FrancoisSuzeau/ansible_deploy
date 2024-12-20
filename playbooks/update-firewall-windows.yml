@@ -81,7 +81,7 @@
         tasks_from: install-exe-from-uri.yml
       when: is_python_not_installed
 
-    - name: Role to extract firewall rules into json
+    - name: "[TRY 1] Role to extract firewall rules into json"
       include_role:
         name: "{{ system_os_type }}/management"
         tasks_from: execute-script.yml
@@ -107,6 +107,11 @@
         name: "{{ system_os_type }}/firewall"
         tasks_from: block-firewall-rules.yml
       when: file_exist
+
+    - name: "[TRY 2] Role to extract firewall rules into json"
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: execute-script.yml
 
     - name: Task to set json blocked firewall rule variable and file exist to false
       ansible.builtin.set_fact:
