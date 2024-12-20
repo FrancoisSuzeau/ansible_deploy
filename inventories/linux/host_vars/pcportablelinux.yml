@@ -22,4 +22,9 @@ ansible_python_interpreter: "/usr/bin/python{{ python_version_short }}"
 
 path_to_firewall_rule_bck: /home/{{ ansible_user }}/firewall_workspace
 
-firewall_to_block: []
+firewall_to_block:
+   - https
+   - http
+
+firewall_to_keep:
+  - https

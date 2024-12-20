@@ -17,3 +17,5 @@ ansible_python_interpreter: /usr/bin/python3.11
 path_to_firewall_rule_bck: /home/{{ ansible_user }}/firewall_workspace
 
 firewall_to_block: []
+
+firewall_to_keep: []

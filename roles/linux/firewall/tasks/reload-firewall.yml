@@ -1,0 +1,13 @@
+---
+- name: Reload firewall
+  ansible.builtin.shell: ufw reload
+  args:
+    executable: /bin/bash
+  register: output
+
+- name: Display firewall reload
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
+  tags:
+    - debug

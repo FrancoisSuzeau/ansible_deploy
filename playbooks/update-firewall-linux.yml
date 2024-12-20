@@ -100,7 +100,7 @@
         name: "{{ system_os_type }}/management"
         tasks_from: change-file-permission.yml
 
-    - name: Role to execute python script to list firewall rules
+    - name: "[TRY 1] Role to execute python script to list firewall rules"
       include_role:
         name: "{{ system_os_type }}/management"
         tasks_from: execute-script.yml
@@ -133,21 +133,69 @@
       include_role:
         name: "{{ system_os_type }}/firewall"
         tasks_from: block-firewall-rules.yml
+      when: file_exist
 
-    # - name: Task to set blocked json extract firewall rule variable
-    #   ansible.builtin.set_fact:
-    #     file_name: ufw_rules_deny.json
-    #     path: "{{ path_to_firewall_rule_bck }}"
-    #     file_exist: false
-    #   delegate_to: localhost
+    - name: Task to set path and script file name
+      ansible.builtin.set_fact:
+        file_name: "{{ script_name }}"
+        path: "{{ path_to_firewall_rule_bck }}"
+      delegate_to: localhost
 
-    # - name: Role to check if blocked firewall rules json exist
-    #   include_role:
-    #     name: "{{ system_os_type }}/management"
-    #     tasks_from: check-file-exist.yml
+    - name: "[TRY 2] Role to execute python script to list firewall rules"
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: execute-script.yml
 
-    # - name: Role to change permissions
-    #   include_role:
-    #     name: "{{ system_os_type }}/management"
-    #     tasks_from: change-file-permission.yml
-    #   when: file_exist
+    - name: Task to set allowed json extract firewall rule variable
+      ansible.builtin.set_fact:
+        file_name: ufw_rules_allow.json
+        path: "{{ path_to_firewall_rule_bck }}"
+        file_exist: false
+      delegate_to: localhost
+
+    - name: Role to check if allowed firewall rules json exist
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: check-file-exist.yml
+
+    - name: Role to change permissions
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: change-file-permission.yml
+      when: file_exist
+
+    - name: Task to set blocked json extract firewall rule variable
+      ansible.builtin.set_fact:
+        file_name: ufw_rules_deny.json
+        path: "{{ path_to_firewall_rule_bck }}"
+        file_exist: false
+      delegate_to: localhost
+
+    - name: Role to check if blocked firewall rules json exist
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: check-file-exist.yml
+
+    - name: Role to change permissions
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: change-file-permission.yml
+      when: file_exist
+
+    - name: Role to load json file
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: load-json-file.yml
+      when: file_exist
+
+    - name: Role to delete firewall rules
+      include_role:
+        name: "{{ system_os_type }}/firewall"
+        tasks_from: delete-firewall-rules.yml
+      loop: "{{ parsed_json }}"
+      when: 
+        - file_exist
+        - item.Name is defined
+        - firewall_to_keep is defined
+        - item.Name not in firewall_to_keep
+        - item.Action == "DENY"

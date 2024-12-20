@@ -17,17 +17,6 @@
   tags:
     - debug
 
-- name: Reload firewall
-  ansible.builtin.shell: ufw reload
-  args:
-    executable: /bin/bash
-  register: output
+- name: Task to reload firewall
+  import_tasks: reload-firewall.yml
   when: firewall_rule_blocked.skipped == false
-
-- name: Display firewall reload
-  ansible.builtin.debug:
-    var: output
-  delegate_to: localhost
-  when: firewall_rule_blocked.skipped == false
-  tags:
-    - debug

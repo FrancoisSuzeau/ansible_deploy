@@ -1,0 +1,51 @@
+---
+- name: Set clean number array
+  ansible.builtin.set_fact:
+    clean_rule_number: []
+  delegate_to: localhost
+
+- name: Get the numbered firewall rules
+  ansible.builtin.shell: ufw status numbered | grep -w '{{ item.Name }}'
+  args:
+    executable: /bin/bash
+  changed_when: false  # We don't want Ansible to treat this as a change
+  register: rule_number
+
+- name: Display raw rule number output
+  ansible.builtin.debug:
+    var: rule_number
+  delegate_to: localhost
+  tags:
+    - debug
+
+- name: Clean up the rule number output
+  ansible.builtin.set_fact:
+    clean_rule_number: "{{ rule_number.stdout | regex_search('\\[\\s*(\\d+)\\]', '\\1') }}"
+  when: rule_number.stdout is defined
+
+- name: Display clean rule number output
+  ansible.builtin.debug:
+    var: clean_rule_number[0]
+  delegate_to: localhost
+  when: clean_rule_number | length > 0
+  tags:
+    - debug
+
+- name: Delete the numbered firewall rules
+  ansible.builtin.shell: yes | ufw delete {{ clean_rule_number[0] }}
+  args:
+    executable: /bin/bash
+  register: output
+  when: clean_rule_number | length > 0
+
+- name: Display rule delete action
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
+  when: clean_rule_number | length > 0
+  tags:
+    - debug
+
+- name: Task to reload firewall
+  import_tasks: reload-firewall.yml
+  when: clean_rule_number | length > 0
