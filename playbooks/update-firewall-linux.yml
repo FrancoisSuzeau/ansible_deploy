@@ -135,12 +135,6 @@
         tasks_from: block-firewall-rules.yml
       when: file_exist
 
-    - name: Task to set path and script file name
-      ansible.builtin.set_fact:
-        file_name: "{{ script_name }}"
-        path: "{{ path_to_firewall_rule_bck }}"
-      delegate_to: localhost
-
     - name: "[TRY 2] Role to execute python script to list firewall rules"
       include_role:
         name: "{{ system_os_type }}/management"
