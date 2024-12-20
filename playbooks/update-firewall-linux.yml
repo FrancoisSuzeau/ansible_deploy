@@ -6,6 +6,8 @@
     path: "{{ path_to_firewall_rule_bck }}"
     script_name: extract_firewall_rule_to_json.py
     file_exist: false
+    parsed_json:  []
+    file_name:  ""
   tasks:
 
     - name: Role to delete previous backup directory
@@ -121,20 +123,26 @@
         tasks_from: change-file-permission.yml
       when: file_exist
 
-    - name: Task to set blocked json extract firewall rule variable
-      ansible.builtin.set_fact:
-        file_name: ufw_rules_deny.json
-        path: "{{ path_to_firewall_rule_bck }}"
-        file_exist: false
-      delegate_to: localhost
-
-    - name: Role to check if blocked firewall rules json exist
+    - name: Role to load json file
       include_role:
         name: "{{ system_os_type }}/management"
-        tasks_from: check-file-exist.yml
-
-    - name: Role to change permissions
-      include_role:
-        name: "{{ system_os_type }}/management"
-        tasks_from: change-file-permission.yml
+        tasks_from: load-json-file.yml
       when: file_exist
+
+    # - name: Task to set blocked json extract firewall rule variable
+    #   ansible.builtin.set_fact:
+    #     file_name: ufw_rules_deny.json
+    #     path: "{{ path_to_firewall_rule_bck }}"
+    #     file_exist: false
+    #   delegate_to: localhost
+
+    # - name: Role to check if blocked firewall rules json exist
+    #   include_role:
+    #     name: "{{ system_os_type }}/management"
+    #     tasks_from: check-file-exist.yml
+
+    # - name: Role to change permissions
+    #   include_role:
+    #     name: "{{ system_os_type }}/management"
+    #     tasks_from: change-file-permission.yml
+    #   when: file_exist

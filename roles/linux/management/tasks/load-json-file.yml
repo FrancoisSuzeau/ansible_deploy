@@ -1,0 +1,18 @@
+---
+- name: Read the JSON file content
+  ansible.builtin.shell: cat "{{ path }}/{{ file_name }}"
+  args:
+    executable: /bin/bash
+  register: json_file_content
+
+- name: Parse JSON content
+  ansible.builtin.set_fact:
+    parsed_json: "{{ json_file_content.stdout | from_json }}"
+  delegate_to: localhost
+
+- name: Display parsed JSON
+  ansible.builtin.debug:
+    var: parsed_json
+  delegate_to: localhost
+  tags:
+    - debug
