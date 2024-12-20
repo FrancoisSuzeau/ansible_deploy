@@ -1,0 +1,33 @@
+---
+- name: Block firewall rules
+  ansible.builtin.shell: ufw deny from {{ item.From }} to any port {{ item.Port }} comment {{ item.Name }}
+  args:
+    executable: /bin/bash
+  loop: "{{ parsed_json }}"
+  register: firewall_rule_blocked
+  when: 
+    - item.Name is defined
+    - firewall_to_block is defined
+    - item.Name in firewall_to_block
+
+- name: Display firewall rule updated
+  ansible.builtin.debug:
+    var: firewall_rule_blocked
+  delegate_to: localhost
+  tags:
+    - debug
+
+- name: Reload firewall
+  ansible.builtin.shell: ufw reload
+  args:
+    executable: /bin/bash
+  register: output
+  when: firewall_rule_blocked.skipped == false
+
+- name: Display firewall reload
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
+  when: firewall_rule_blocked.skipped == false
+  tags:
+    - debug

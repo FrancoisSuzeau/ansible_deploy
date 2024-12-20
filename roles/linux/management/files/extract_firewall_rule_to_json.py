@@ -36,7 +36,7 @@ def get_ufw_rules(action):
                     rule = {
                         "Name": name,
                         "Action": parts[1],
-                        "Port/Service": parts[0],
+                        "Port": parts[0],
                         "From": source
                     }
                     rules.append(rule)

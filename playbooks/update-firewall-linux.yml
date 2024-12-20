@@ -129,6 +129,11 @@
         tasks_from: load-json-file.yml
       when: file_exist
 
+    - name: Role to block firewall rules
+      include_role:
+        name: "{{ system_os_type }}/firewall"
+        tasks_from: block-firewall-rules.yml
+
     # - name: Task to set blocked json extract firewall rule variable
     #   ansible.builtin.set_fact:
     #     file_name: ufw_rules_deny.json
