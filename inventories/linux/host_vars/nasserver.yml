@@ -13,3 +13,5 @@ ansible_user: francois
 ansible_password: "{{ francois_pwd }}"
 
 ansible_python_interpreter: /usr/bin/python3.11
+
+path_to_firewall_rule_bck: /home/{{ ansible_user }}/firewall_workspace

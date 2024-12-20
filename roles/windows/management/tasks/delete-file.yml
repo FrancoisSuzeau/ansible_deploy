@@ -8,5 +8,6 @@
 - name: Display delete file output
   ansible.builtin.debug:
     var: output
+  delegate_to: locahost
   tags:
     - debug

@@ -68,9 +68,10 @@
         name: "{{ system_os_type }}/management"
         tasks_from: check-python-installation.yml
 
-    - name: Task to set python uri variable
+    - name: Task to set python installer variable
       ansible.builtin.set_fact:
         uri_exe: "{{ python_uri_exe }}"
+        installer_name: python-{{ python_version }}-amd64.exe
       delegate_to: localhost
       when: is_python_not_installed
 
@@ -90,7 +91,7 @@
         file_name: firewall_rules_Allow.json
       delegate_to: localhost
 
-    - name: Check the files exist
+    - name: Role to check the files exist
       include_role:
         name: "{{ system_os_type }}/management"
         tasks_from: check-file-exist.yml
@@ -113,7 +114,7 @@
         file_exist: false
       delegate_to: localhost
 
-    - name: Check the files exist
+    - name: Role to check the files exist
       include_role:
         name: "{{ system_os_type }}/management"
         tasks_from: check-file-exist.yml

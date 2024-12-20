@@ -1,0 +1,25 @@
+---
+- name: Update apt package cache
+  ansible.builtin.apt:
+    update_cache: yes
+  register: output
+
+- name: Display update apt package output
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
+  tags:
+    - debug
+
+- name: Install package "{{ package_name }}"
+  ansible.builtin.apt:
+    name: "{{ package_name }}"
+    state: present
+  register: output
+
+- name: Display apt installation
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
+  tags:
+    - debug

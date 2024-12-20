@@ -4,6 +4,7 @@
   gather_facts: false
   vars:
     path: "{{ path_to_firewall_rule_bck }}"
+    script_name: extract_firewall_rule_to_json.py
   tasks:
 
     - name: Role to delete previous backup directory
@@ -37,28 +38,88 @@
         name: "{{ system_os_type }}/management"
         tasks_from: copy-folder.yml
 
-    - name: Make backup ipv4 and ipv6 rules
+    - name: Role to make backup ipv4 and ipv6 rules
       include_role:
         name: "{{ system_os_type }}/firewall"
         tasks_from: make-backup.yml
 
-    - name: Task to path and ipv4 rule file variable
+    - name: Task to set path and ipv4 rule file variable
       ansible.builtin.set_fact:
         path: "{{ path_to_firewall_rule_bck }}"
         file_name: iptables-backup.rules
       delegate_to: localhost
 
-    - name: Change permissions
+    - name: Role to change permissions
       include_role:
         name: "{{ system_os_type }}/management"
-        tasks_from: create-file.yml
+        tasks_from: change-file-permission.yml
 
-    - name: Task to path and ipv6 rule file variable
+    - name: Task to set ipv6 rule file variable
       ansible.builtin.set_fact:
         file_name: ip6tables-backup.rules
       delegate_to: localhost
 
-    - name: Change permissions
+    - name: Role to change permissions
       include_role:
         name: "{{ system_os_type }}/management"
-        tasks_from: create-file.yml
+        tasks_from: change-file-permission.yml
+
+    - name: Role to check python installation
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: check-python-installation.yml
+
+    - name: Task to set pythons installer variable
+      ansible.builtin.set_fact:
+        package_name: "python{{ python_version_short }}"
+      delegate_to: localhost
+      when: is_python_not_installed
+
+    - name: Role to install python using apt
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: install-packages-using-apt.yml
+      when: is_python_not_installed
+
+    - name: Task to set path and script file name
+      ansible.builtin.set_fact:
+        file_name: "{{ script_name }}"
+        path: "{{ path_to_firewall_rule_bck }}"
+      delegate_to: localhost
+
+    - name: Role to copy python script target host
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: copy-file.yml
+
+    - name: Role to change permissions
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: change-file-permission.yml
+
+    - name: Role to execute python script to list firewall rules
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: execute-script.yml
+
+    - name: Task to set allowed json extract firewall rule variable
+      ansible.builtin.set_fact:
+        file_name: ufw_rules_allow.json
+        path: "{{ path_to_firewall_rule_bck }}"
+      delegate_to: localhost
+
+    - name: Role to change permissions
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: change-file-permission.yml
+
+    - name: Task to set allowed json extract firewall rule variable
+      ansible.builtin.set_fact:
+        file_name: ufw_rules_deny.json
+        path: "{{ path_to_firewall_rule_bck }}"
+      delegate_to: localhost
+
+    - name: Role to change permissions
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: change-file-permission.yml

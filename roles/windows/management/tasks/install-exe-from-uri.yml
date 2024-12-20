@@ -1,11 +1,23 @@
 ---
-- name: Download Python installer
+- name: Download installer
   ansible.windows.win_get_url:
     url: "{{ uri_exe }}"
     dest: "{{ path }}"
+  register: output
+
+- name: Display get from uri output
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
 
 - name: "Install Python {{ python_version }} silently"
-  ansible.windows.win_command: "{{ path }}\\python-{{ python_version }}-amd64.exe /quiet InstallAllUsers=1 PrependPath=1"
+  ansible.windows.win_command: "{{ path }}\{{ installer_name }} /quiet InstallAllUsers=1 PrependPath=1"
+  register: output
+
+- name: Display install output
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
 
 - name: Check Python version after installatiion
   import_tasks: check-python-installation.yml

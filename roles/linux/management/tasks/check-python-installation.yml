@@ -1,16 +1,15 @@
 ---
 - name: Check Python installation
-  ansible.windows.win_command:
-    cmd: python --version
+  ansible.builtin.shell: python3 --version
+  args:
+    executable: /bin/bash
   register: python_installation_check
   ignore_errors: true
 
 - name: Set python is not installed variable to true if Python is not installed
-  ansible.builtin.set_fact:
+  set_fact:
     is_python_not_installed: "{{ python_installation_check.rc != 0 }}"
-  delegate_to: localhost
 
 - name: Show python installation status
-  ansible.builtin.debug:
+  debug:
     msg: "Python not installed: {{ is_python_not_installed }}"
-  delegate_to: localhost
