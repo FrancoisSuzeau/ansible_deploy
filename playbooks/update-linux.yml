@@ -1,0 +1,25 @@
+- name: Update host system
+  hosts: "{{ hostname }}"
+  gather_facts: false
+  vars:
+    confirm_removal: false
+  tasks:
+    - name: Role to update system
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: update.yml
+
+    - name: Role to upgrade system
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: upgrade.yml
+
+    - name: Role to reboot system after update
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: reboot.yml
+
+    - name: Role to remove old packages
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: apt-remove.yml

@@ -1,0 +1,12 @@
+---
+- name: Upgrade all packages (for Debian-based systems)
+  ansible.builtin.apt:
+    upgrade: dist
+  register: result
+
+- name: Display upgrade output
+  ansible.builtin.debug:
+    var: result
+  delegate_to: localhost
+  tags:
+    - debug

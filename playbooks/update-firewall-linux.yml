@@ -78,6 +78,29 @@
       delegate_to: localhost
       when: is_python_not_installed
 
+    - name: Role to update system
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: update.yml
+      when: is_python_not_installed
+
+    - name: Role to upgrade system
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: upgrade.yml
+      when: is_python_not_installed
+
+    - name: Role to reboot system after update
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: reboot.yml
+      when: is_python_not_installed
+
+    - name: Role to remove old packages
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: apt-remove.yml
+
     - name: Role to install python using apt
       include_role:
         name: "{{ system_os_type }}/management"

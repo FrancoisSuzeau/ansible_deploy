@@ -1,0 +1,40 @@
+---
+- name: Check packages to be removed with apt autoremove
+  ansible.builtin.shell: apt autoremove --dry-run
+  args:
+    executable: /bin/bash
+  register: autoremove_output
+  changed_when: false
+
+- name: Display packages that can be removed
+  ansible.builtin.debug:
+    var: autoremove_output.stdout_lines
+  delegate_to: localhost
+  tags:
+    - debug
+
+- name: Check if there are any packages to remove
+  set_fact:
+    confirm_removal: true
+  when: autoremove_output.stdout_lines | length > 0 and
+        ('The following packages will be REMOVED:' in autoremove_output.stdout_lines)
+
+- name: Display confirm removal
+  ansible.builtin.debug:
+    var: confirm_removal
+  delegate_to: localhost
+  tags:
+    - debug
+
+- name: Optionally remove obsolete packages
+  ansible.builtin.apt:
+    autoremove: yes
+  when: confirm_removal
+  register: output
+
+- name: Display removal
+  ansible.builtin.debug:
+    var: output
+  delegate_to: localhost
+  tags:
+    - debug

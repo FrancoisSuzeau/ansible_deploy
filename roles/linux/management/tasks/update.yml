@@ -1,0 +1,13 @@
+---
+- name: Update package list (for Debian-based systems)
+  ansible.builtin.apt:
+    update_cache: yes
+    force_apt_get: yes
+  register: result
+
+- name: Display update output
+  ansible.builtin.debug:
+    var: result
+  delegate_to: localhost
+  tags:
+    - debug
