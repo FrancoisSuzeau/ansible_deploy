@@ -1,0 +1,8 @@
+---
+- name: Check host
+  hosts: "{{ hostname }}"
+  gather_facts: false
+  tasks:
+    - name: Role to ping host
+      include_role:
+        name: "{{ system_os_type }}/ping_host"

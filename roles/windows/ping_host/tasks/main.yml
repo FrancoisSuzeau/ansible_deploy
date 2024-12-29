@@ -2,5 +2,3 @@
 - name: Simply ping the host
   ansible.windows.win_ping:
     data: pong
-  tags:
-    - ping

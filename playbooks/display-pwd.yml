@@ -1,24 +1,17 @@
 ---
-- name: Check host
+- name: Display ansible connexion password
   hosts: "{{ hostname }}"
   gather_facts: false
+  vars:
+    given_pwd: NONE
   tasks:
-    - name: Role to ping host
-      include_role:
-        name: "{{ system_os_type }}/ping_host"
-      tags:
-        - ping
 
     - name: Task to set given password
       ansible.builtin.set_fact:
         given_pwd: "{{ ansible_password }}"
       delegate_to: localhost
-      tags:
-        - decrypt_pwd
 
     - name: Role to output password
       include_role:
         name: "common"
         tasks_from: decrypt-password.yml
-      tags:
-        - decrypt_pwd
