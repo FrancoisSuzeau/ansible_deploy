@@ -1,0 +1,8 @@
+- name: Update host system
+  hosts: "{{ hostname }}"
+  gather_facts: false
+  tasks:
+    - name: Role to update system
+      include_role:
+        name: "{{ system_os_type }}/management"
+        tasks_from: update.yml
