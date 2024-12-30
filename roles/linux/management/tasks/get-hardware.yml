@@ -1,0 +1,30 @@
+---
+- name: Display CPU and RAM details for raspberry
+  ansible.builtin.debug:
+    msg: >
+      Host: {{ inventory_hostname }}
+      CPU: {{ ansible_processor_vcpus }} cores
+      RAM: {{ ansible_memtotal_mb }} MB
+  delegate_to: localhost
+
+- name: Get total disk space
+  ansible.builtin.shell: "lsblk -d -o NAME,SIZE | grep -v loop"
+  args:
+    executable: /bin/bash
+  register: disk_space
+
+- name: Display total disk space
+  ansible.builtin.debug:
+    msg: "Total Disk Space on '/': {{ disk_space.stdout }}"
+  delegate_to: localhost
+
+- name: Get available disk space
+  ansible.builtin.shell: "df -h / | tail -1 | awk '{print $4}'"
+  args:
+    executable: /bin/bash
+  register: disk_available_space
+
+- name: Display available disk space
+  ansible.builtin.debug:
+    msg: "Available Disk Space on '/': {{ disk_available_space.stdout }}"
+  delegate_to: localhost

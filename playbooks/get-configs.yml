@@ -1,0 +1,9 @@
+---
+- name: Gather host resources
+  hosts: "{{ hostname }}"
+  gather_facts: yes  # Ensures facts are collected
+  tasks:
+    - name: Role to hardware ressources
+      include_role:
+        name: "{{system_os_type}}/management"
+        tasks_from: get-hardware.yml

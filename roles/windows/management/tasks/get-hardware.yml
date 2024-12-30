@@ -1,0 +1,15 @@
+---
+- name: Gather basic facts
+  ansible.windows.win_shell: |
+    $CPU = Get-WmiObject -Class Win32_Processor | Measure-Object -Property NumberOfCores -Sum | Select-Object -ExpandProperty Sum
+    $RAM = (Get-WmiObject -Class Win32_ComputerSystem).TotalPhysicalMemory / 1MB
+    $DiskSize = (Get-Volume -DriveLetter "C").Size / 1GB
+    $FreeSpace = (Get-Volume -DriveLetter "C").SizeRemaining / 1GB
+    Write-Output "CPU: $CPU cores; RAM: $RAM MB; Disk Size: $DiskSize GB; Free Space: $FreeSpace GB"
+  args:
+    executable:  powershell
+  register: windows_resources
+
+- name: Display Windows host resources
+  debug:
+    msg: "{{ windows_resources.stdout }}"
