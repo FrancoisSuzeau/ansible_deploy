@@ -11,7 +11,7 @@
   delegate_to: localhost
 
 - name: "Install Python {{ python_version }} silently"
-  ansible.windows.win_command: "{{ path }}\{{ installer_name }} /quiet InstallAllUsers=1 PrependPath=1"
+  ansible.windows.win_command: "{{ path }}\\{{ installer_name }} /quiet InstallAllUsers=1 PrependPath=1"
   register: output
 
 - name: Display install output
