@@ -1,17 +1,17 @@
 ---
-- name: Display ansible connexion password
+- name: Display ansible connexion host
   hosts: "{{ hostname }}"
   gather_facts: false
   vars:
     given_vault: NONE
   tasks:
 
-    - name: Task to set given password
+    - name: Task to set given host
       ansible.builtin.set_fact:
-        given_vault: "{{ ansible_password }}"
+        given_vault: "{{ ansible_host }}"
       delegate_to: localhost
 
-    - name: Role to output password
+    - name: Role to output host
       include_role:
         name: "common"
         tasks_from: decrypt-vault.yml

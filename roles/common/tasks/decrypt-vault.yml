@@ -1,0 +1,5 @@
+---
+- name: Decrypt a given vault string
+  ansible.builtin.debug:
+    var: given_vault
+  delegate_to: localhost
