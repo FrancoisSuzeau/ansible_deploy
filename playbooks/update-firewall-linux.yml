@@ -8,6 +8,7 @@
     file_exist: false
     parsed_json:  []
     file_name:  ""
+    confirm_removal: false
   tasks:
 
     - name: Role to delete previous backup directory
